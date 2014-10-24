@@ -25,9 +25,6 @@ for(test in filenames_test){
         #then concatenate into a file of the object merged
         merged <- paste(c(getwd(), "/merged/", filename_abbr, "merged.txt"), sep = "", collapse = "")
         cat(c(test_data, train_data), file=merged, sep="\n")
-        
-        
-        
 }
 
 #subset for only those columns of mean() and std() features, vector of TRUE or FALSE values 
@@ -39,9 +36,12 @@ rows_mean_or_std <- grepl("*mean\\(\\)*|*std\\(\\)*", features) #have our TRUE o
 
 #subset the mean() or std() features out of features.txt:
 features <- features[rows_mean_or_std]
-features
 
-#meaningful variable names using Hadley Wickham's guide (I prefer lowercase with underscores for filenames and variables):
+#subset the merged data:
+data <- read.table(paste(c(getwd(), "/merged/X_merged.txt"), sep = "", collapse = ""))
+subsetted_data <- data[ ,rows_mean_or_std]
+
+#meaningful variable names using Hadley Wickham's guide:
 features <- gsub("tB", "time_B", features)
 features <- gsub("tG", "time_G", features)
 features <- gsub("fB", "fft_B", features)
@@ -58,23 +58,17 @@ features <- gsub("-X", "_x_axis", features)
 features <- gsub("-Y", "_y_axis", features)
 features <- gsub("-Z", "_z_axis", features)
 
-#subset the merged data:
-data <- read.table(paste(c(getwd(), "/merged/X_merged.txt"), sep = "", collapse = ""))
-subsetted_data <- data[ ,rows_mean_or_std]
-head(subsetted_data)
-
 #read merged data of subject and activities into objects
 subjects <- read.table(paste(c(getwd(), "/merged/subject_merged.txt"), sep = "", collapse = ""))
 activities <- read.table(paste(c(getwd(), "/merged/y_merged.txt"), sep = "", collapse = ""))
 
-#make activity numbers into names
+#convert activity numbers into names
 activities[activities == 1] <- "WALKING"
 activities[activities == 2] <- "WALKING_UPSTAIRS"
 activities[activities == 3] <- "WALKING_DOWNSTAIRS"
 activities[activities == 4] <- "SITTING"
 activities[activities == 5] <- "STANDING"
 activities[activities == 6] <- "LAYING"
-activities
 
 #add columns of activities and subjects
 subsetted_data <-cbind(subjects, activities, subsetted_data)
