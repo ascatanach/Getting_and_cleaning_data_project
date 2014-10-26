@@ -1,11 +1,11 @@
 library(dplyr)
 
 #directories into variables
-path_test <- paste(c(getwd(), "/test/"), sep = "", collapse = "")
-path_train <- paste(c(getwd(), "/train/"), sep = "", collapse = "")
+path_test <- "./test/"
+path_train <- "./train/"
 
 #Make a directory for the merged data
-dir.create(paste(c(getwd(), "/merged"), sep = "", collapse = ""))
+dir.create("./merged")
 
 #merge the data for path_test and path_train directories
 filenames_test <- dir(path_test, pattern =".txt")
@@ -23,12 +23,12 @@ for(test in filenames_test){
         train_data <- readLines(filename_train)
         
         #then concatenate into a file of the object merged
-        merged <- paste(c(getwd(), "/merged/", filename_abbr, "merged.txt"), sep = "", collapse = "")
+        merged <- paste(c("./merged/", filename_abbr, "merged.txt"), sep = "", collapse = "")
         cat(c(test_data, train_data), file=merged, sep="\n")
 }
 
 #subset for only those columns of mean() and std() features, vector of TRUE or FALSE values 
-feature_file <- paste(c(getwd(), "/features.txt"), sep = "", collapse = "")
+feature_file <- "./features.txt"
 features <- read.table(feature_file)
 features <- features[, 2]
 features <- as.character(features)
@@ -38,7 +38,7 @@ rows_mean_or_std <- grepl("*mean\\(\\)*|*std\\(\\)*", features) #have our TRUE o
 features <- features[rows_mean_or_std]
 
 #subset the merged data:
-data <- read.table(paste(c(getwd(), "/merged/X_merged.txt"), sep = "", collapse = ""))
+data <- read.table("./merged/X_merged.txt")
 subsetted_data <- data[ ,rows_mean_or_std]
 
 #meaningful variable names using Hadley Wickham's guide:
@@ -59,8 +59,8 @@ features <- gsub("-Y", "_y_axis", features)
 features <- gsub("-Z", "_z_axis", features)
 
 #read merged data of subject and activities into objects
-subjects <- read.table(paste(c(getwd(), "/merged/subject_merged.txt"), sep = "", collapse = ""))
-activities <- read.table(paste(c(getwd(), "/merged/y_merged.txt"), sep = "", collapse = ""))
+subjects <- read.table("./merged/subject_merged.txt")
+activities <- read.table("./merged/y_merged.txt")
 
 #convert activity numbers into names
 activities[activities == 1] <- "WALKING"
